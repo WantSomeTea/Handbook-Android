@@ -3,6 +3,7 @@ package com.sergey.handbook.main;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -25,6 +26,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Pattern;
 
 /**
  * Created by Sergey.
@@ -39,14 +41,23 @@ public class MainService {
                 .getPreferences.APP_PREFERENCES, Context.MODE_PRIVATE);
     }
 
-    public ContactsAdapter getContactsAdapter(Boolean isSwipeRefresh)
-            throws InterruptedException, ExecutionException, JSONException, IOException {
-        ArrayList<HashMap<String, String>> contactsList;
-        contactsList = Utils.getContactsList();
-        if (contactsList == null || isSwipeRefresh) {
-            contactsList = getContactsList();
-            Utils.setContactsList(contactsList);
+    public ArrayList<HashMap<String, String>> getContactsList (Boolean isSwipeRefresh) {
+        ArrayList<HashMap<String, String>> contactsList = null;
+        try {
+            contactsList = Utils.getContactsList();
+            if (contactsList == null || isSwipeRefresh) {
+                contactsList = getContactsListFromAPI();
+                Utils.setContactsList(contactsList);
+            }
+        } catch (InterruptedException | ExecutionException | JSONException | IOException e) {
+            e.printStackTrace();
         }
+        return contactsList;
+    }
+
+    public ContactsAdapter getContactsAdapter(ArrayList<HashMap<String, String>> contactsList)
+            throws InterruptedException, ExecutionException, JSONException, IOException {
+
         ContactsAdapter contactsAdapter = null;
         if (contactsList != null && contactsList.size() != 0) {
             Comparator<HashMap<String, String>> comparator = new Comparator<HashMap<String, String>>() {
@@ -65,7 +76,7 @@ public class MainService {
         return contactsAdapter;
     }
 
-    public ArrayList<HashMap<String, String>> getContactsList()
+    public ArrayList<HashMap<String, String>> getContactsListFromAPI()
             throws ExecutionException, InterruptedException, IOException, JSONException {
         ArrayList<HashMap<String, String>> contactsArrayList = new ArrayList<>();
         String phoneNumber = sharedPreferences.getString(Preferences
@@ -101,8 +112,7 @@ public class MainService {
         return contactsArrayList;
     }
 
-    public AdapterView.OnItemClickListener getListOnItemClickListener() {
-        final ArrayList<HashMap<String, String>> list = Utils.getContactsList();
+    public AdapterView.OnItemClickListener getListOnItemClickListener(final ArrayList<HashMap<String, String>> list) {
         return new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -121,5 +131,38 @@ public class MainService {
                 context.startActivity(intent);
             }
         };
+    }
+
+
+    public SearchView.OnSuggestionListener getOnSuggestionListener() {
+        return new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                return false;
+            }
+        };
+    }
+
+    public ArrayList<HashMap<String, String>> getTempContactsArrayList(ArrayList<HashMap<String, String>> contactsArrayList, String query) {
+        ArrayList<HashMap<String, String>> temp = new ArrayList<>();
+        int queryLength = query.length();
+        temp.clear();
+        if (contactsArrayList != null && contactsArrayList.size() != 0) {
+            for (int i = 0; i < contactsArrayList.size(); i++) {
+                if (queryLength <= contactsArrayList.get(i).get("name").length()) {
+                    Pattern pattern = Pattern.compile(query, Pattern.CASE_INSENSITIVE);
+                    if (pattern.matcher(contactsArrayList.get(i).get("name")).find()) {
+                        temp.add(contactsArrayList.get(i));
+                    }
+                }
+            }
+        }
+
+        return temp;
     }
 }

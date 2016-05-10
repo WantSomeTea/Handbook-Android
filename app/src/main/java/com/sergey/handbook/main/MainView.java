@@ -1,5 +1,6 @@
 package com.sergey.handbook.main;
 
+import android.support.v7.widget.SearchView;
 import android.widget.AdapterView;
 
 /**
@@ -14,4 +15,8 @@ public interface MainView {
     void showAlertDialog(int text);
 
     void setListOnItemClickListener(AdapterView.OnItemClickListener listOnItemClickListener);
+
+    void setSearchViewOnQueryTextListener(SearchView.OnQueryTextListener onQueryTextListener);
+
+    void setSearchViewOnSuggestionListener(SearchView.OnSuggestionListener onSuggestionListener);
 }

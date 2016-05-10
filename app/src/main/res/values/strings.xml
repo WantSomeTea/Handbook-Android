@@ -29,4 +29,5 @@
     <string name="ic_work_number_image">ic_work_number_image</string>
     <string name="email_image">email_image</string>
     <string name="call_mobile">Позвонить на мобильный</string>
+    <string name="action_bar_search">Поиск</string>
 </resources>

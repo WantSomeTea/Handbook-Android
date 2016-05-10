@@ -3,8 +3,10 @@ package com.sergey.handbook.main;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     SwipeRefreshLayout swipeRefreshLayout;
     ListView listView;
     ProgressBar progressBar;
+    SearchView searchView;
     MainPresenter presenter;
     MainService mainService;
 
@@ -50,6 +53,14 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.search);
+        searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView.setIconifiedByDefault(true);
+
+        presenter.getSearchViewOnQueryTextListener();
+        presenter.getSearchViewOnSuggestionListener();
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -91,4 +102,15 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public void setListOnItemClickListener(AdapterView.OnItemClickListener listOnItemClickListener) {
         listView.setOnItemClickListener(listOnItemClickListener);
     }
+
+    @Override
+    public void setSearchViewOnQueryTextListener(SearchView.OnQueryTextListener onQueryTextListener) {
+        searchView.setOnQueryTextListener(onQueryTextListener);
+    }
+
+    @Override
+    public void setSearchViewOnSuggestionListener(SearchView.OnSuggestionListener onSuggestionListener) {
+        searchView.setOnSuggestionListener(onSuggestionListener);
+    }
+
 }
