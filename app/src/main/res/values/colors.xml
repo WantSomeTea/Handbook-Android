@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorFullScreenActivityBackground">#0099cc</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="textColor">#0f0f0f</color>
+    <color name="white">#f6f6f6</color>
+    <color name="lighten_grey">#c9c9c9</color>
+    <color name="colorLink">#33b5e5</color>
+</resources>

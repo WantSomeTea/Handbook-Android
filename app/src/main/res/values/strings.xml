@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Handbook</string>
+
+    <string name="dummy_button">Продолжить</string>
+    <string name="dummy_content">HandBook</string>
+
+    <string name="title_activity_register">Регистрация</string>
+    <string name="phonenumber_empty_error">Введите номер телефона</string>
+    <string name="phonenumber_incorrect_error">Неправильный номер</string>
+    <string name="type_phone_text">Введите номер телефона</string>
+    <string name="server_name">http://ec2-52-49-236-105.eu-west-1.compute.amazonaws.com:3000</string>
+    <string name="check_phone_urlpath">/api/v1/reg/check_phone/?phoneNumber=%s</string>
+    <string name="phonenumber_notin_DB">Вашего телефона нет в базе данных компании</string>
+    <string name="title_activity_main">Контакты</string>
+    <string name="register_path">/api/v1/reg/register/?phoneNumber=%s</string>
+    <string name="connection_error">Ошибка соединения</string>
+    <string name="title_activity_settings">Настройки</string>
+    <string name="settings_menu">Настройки</string>
+    <string name="phonebook_params"><![CDATA[phoneNumber=%1$s&key=%2$s]]></string>
+    <string name="arrow">arrow</string>
+    <string name="network_error_text">Ошибка подключения. Проверьте соединение с сетью Интернет</string>
+    <string name="ok_button">OK</string>
+    <string name="network_connection_error_title">Ошибка</string>
+    <string name="title_activity_info">Информация</string>
+    <string name="phone_number_text">Ваш номер телефона: %s</string>
+    <string name="version_text">Версия: %s</string>
+    <string name="title_activity_contact_info">Информация о контакте</string>
+    <string name="ic_phone_nunmber_image">ic_phone_nunmber_image</string>
+    <string name="ic_work_number_image">ic_work_number_image</string>
+    <string name="email_image">email_image</string>
+    <string name="call_mobile">Позвонить на мобильный</string>
+</resources>
