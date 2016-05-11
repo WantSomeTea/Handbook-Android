@@ -1,6 +1,8 @@
 package com.sergey.handbook.main;
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -24,6 +26,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
     SearchView searchView;
     MainPresenter presenter;
     MainService mainService;
+
+    @Override
+    public SearchView getSearchView() {
+        return searchView;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +62,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
         getMenuInflater().inflate(R.menu.main_menu, menu);
 
         MenuItem menuItem = menu.findItem(R.id.search);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
         searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(true);
 
         presenter.getSearchViewOnQueryTextListener();

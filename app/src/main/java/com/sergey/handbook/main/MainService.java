@@ -3,12 +3,15 @@ package com.sergey.handbook.main;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.provider.SearchRecentSuggestions;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.AdapterView;
 
 import com.sergey.handbook.Preferences;
 import com.sergey.handbook.R;
+import com.sergey.handbook.SuggestionProvider;
 import com.sergey.handbook.Utils;
 import com.sergey.handbook.contact_info.ContactInfoActivity;
 import com.squareup.okhttp.OkHttpClient;
@@ -34,11 +37,14 @@ import java.util.regex.Pattern;
 public class MainService {
     private Context context;
     private SharedPreferences sharedPreferences;
+    private SearchRecentSuggestions suggestions;
 
     public MainService(Context context) {
         this.context = context;
         sharedPreferences = context.getSharedPreferences(Preferences
                 .getPreferences.APP_PREFERENCES, Context.MODE_PRIVATE);
+        suggestions = new SearchRecentSuggestions(context,
+                SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
     }
 
     public ArrayList<HashMap<String, String>> getContactsList (Boolean isSwipeRefresh) {
@@ -118,34 +124,25 @@ public class MainService {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 HashMap<String, String> map = list.get(position);
 
-                Intent intent = new Intent(context, ContactInfoActivity.class);
-                intent.putExtra("name", map.get("name"));
-                intent.putExtra("phoneNumber", map.get("phoneNumber"));
-                intent.putExtra("workNumber", map.get("workNumber"));
-                intent.putExtra("email", map.get("email"));
-                intent.putExtra("additionalNumbs", map.get("additionalNumbs"));
-                intent.putExtra("companyName", map.get("companyName"));
-                intent.putExtra("jobName", map.get("jobName"));
-                intent.putExtra("departmentName", map.get("departmentName"));
+                suggestions.saveRecentQuery(map.get("name"), null);
 
-                context.startActivity(intent);
+                context.startActivity(getContactIntent(map));
             }
         };
     }
 
+    private Intent getContactIntent(HashMap<String, String> map) {
+        Intent intent = new Intent(context, ContactInfoActivity.class);
+        intent.putExtra("name", map.get("name"));
+        intent.putExtra("phoneNumber", map.get("phoneNumber"));
+        intent.putExtra("workNumber", map.get("workNumber"));
+        intent.putExtra("email", map.get("email"));
+        intent.putExtra("additionalNumbs", map.get("additionalNumbs"));
+        intent.putExtra("companyName", map.get("companyName"));
+        intent.putExtra("jobName", map.get("jobName"));
+        intent.putExtra("departmentName", map.get("departmentName"));
 
-    public SearchView.OnSuggestionListener getOnSuggestionListener() {
-        return new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionSelect(int position) {
-                return false;
-            }
-
-            @Override
-            public boolean onSuggestionClick(int position) {
-                return false;
-            }
-        };
+        return intent;
     }
 
     public ArrayList<HashMap<String, String>> getTempContactsArrayList(ArrayList<HashMap<String, String>> contactsArrayList, String query) {
@@ -164,5 +161,19 @@ public class MainService {
         }
 
         return temp;
+    }
+
+    public void onSuggestionEvent(ArrayList<HashMap<String, String>> contactsList, int position, SearchView searchView) {
+        if (contactsList != null && contactsList.size() != 0) {
+            Cursor cursor = (Cursor) searchView.getSuggestionsAdapter().getItem(position);
+            String feedName = cursor.getString(3);
+            for (HashMap<String, String> map : contactsList) {
+                if (map.get("name").equals(feedName)) {
+                    suggestions.saveRecentQuery(map.get("name"), null);
+
+                    context.startActivity(getContactIntent(map));
+                }
+            }
+        }
     }
 }

@@ -20,6 +20,7 @@ public class MainPresenter {
     private final MainView view;
     private final MainService service;
     private ContactsAdapter contactsAdapter;
+    private ArrayList<HashMap<String, String>> contactsList;
 
     MainPresenter(MainView view, MainService service) {
         this.view = view;
@@ -28,7 +29,6 @@ public class MainPresenter {
 
     public void getContactsList(final Boolean isSwipeRefresh) {
         AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
-            ArrayList<HashMap<String, String>> contactsList;
             @Override
             protected Void doInBackground(Void... params) {
                 try {
@@ -70,11 +70,10 @@ public class MainPresenter {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 try {
-                    ArrayList<HashMap<String, String>> contactsArrayList = service.getContactsList(false);
-                    ArrayList<HashMap<String, String>> tempContactsArrayList = service.getTempContactsArrayList(contactsArrayList, query);
+                    ArrayList<HashMap<String, String>> tempContactsArrayList = service.getTempContactsArrayList(contactsList, query);
                     contactsAdapter = service.getContactsAdapter(tempContactsArrayList);
                     view.setAdapterToListView(contactsAdapter);
-                    view.setListOnItemClickListener(service.getListOnItemClickListener(contactsArrayList));
+                    view.setListOnItemClickListener(service.getListOnItemClickListener(tempContactsArrayList));
                 } catch (InterruptedException | ExecutionException | JSONException | IOException e) {
                     e.printStackTrace();
                 }
@@ -84,11 +83,10 @@ public class MainPresenter {
             @Override
             public boolean onQueryTextChange(String newText) {
                 try {
-                    ArrayList<HashMap<String, String>> contactsArrayList = service.getContactsList(false);
-                    ArrayList<HashMap<String, String>> tempContactsArrayList = service.getTempContactsArrayList(contactsArrayList, newText);
+                    ArrayList<HashMap<String, String>> tempContactsArrayList = service.getTempContactsArrayList(contactsList, newText);
                     contactsAdapter = service.getContactsAdapter(tempContactsArrayList);
                     view.setAdapterToListView(contactsAdapter);
-                    view.setListOnItemClickListener(service.getListOnItemClickListener(contactsArrayList));
+                    view.setListOnItemClickListener(service.getListOnItemClickListener(tempContactsArrayList));
                 } catch (InterruptedException | ExecutionException | JSONException | IOException e) {
                     e.printStackTrace();
                 }
@@ -98,6 +96,18 @@ public class MainPresenter {
     }
 
     public void getSearchViewOnSuggestionListener() {
-        view.setSearchViewOnSuggestionListener(service.getOnSuggestionListener());
+        view.setSearchViewOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                service.onSuggestionEvent(contactsList, position, view.getSearchView());
+                return true;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                service.onSuggestionEvent(contactsList, position, view.getSearchView());
+                return true;
+            }
+        });
     }
 }

@@ -19,4 +19,6 @@ public interface MainView {
     void setSearchViewOnQueryTextListener(SearchView.OnQueryTextListener onQueryTextListener);
 
     void setSearchViewOnSuggestionListener(SearchView.OnSuggestionListener onSuggestionListener);
+
+    SearchView getSearchView();
 }
