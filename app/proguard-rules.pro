@@ -18,3 +18,4 @@
 -dontwarn org.mockito.**
 -dontwarn okio.**
 -dontwarn org.objenesis.**
+-keep class android.support.v7.widget.SearchView { *; }
