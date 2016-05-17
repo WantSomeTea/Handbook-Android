@@ -13,10 +13,17 @@ import android.view.View;
 import com.digits.sdk.android.Digits;
 import com.sergey.handbook.Preferences;
 import com.sergey.handbook.R;
+import com.sergey.handbook.Utils;
 import com.sergey.handbook.main.MainActivity;
 import com.sergey.handbook.register.RegisterActivity;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
+
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -109,6 +116,12 @@ public class LaunchActivity extends AppCompatActivity {
         Fabric.with(this, new TwitterCore(authConfig), new Digits());
 
         setContentView(R.layout.activity_launch);
+
+        try {
+            Utils.getSSLContext(LaunchActivity.this);
+        } catch (IOException | KeyStoreException | NoSuchAlgorithmException | CertificateException | KeyManagementException e) {
+            e.printStackTrace();
+        }
 
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);

@@ -31,6 +31,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import javax.net.ssl.HttpsURLConnection;
+
 /**
  * Created by Sergey.
  */
@@ -55,7 +57,7 @@ public class RegisterService {
             @Override
             public Boolean call() throws Exception {
                 boolean isNumberInDB = false;
-                OkHttpClient client = new OkHttpClient();
+                OkHttpClient client = new OkHttpClient().setSslSocketFactory(HttpsURLConnection.getDefaultSSLSocketFactory());
                 Request request = new Request.Builder()
                         .url(context.getString(R.string.server_name) + context.getString(R.string.check_phone_urlpath, phoneNumber))
                         .build();
@@ -79,7 +81,7 @@ public class RegisterService {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    OkHttpClient client = new OkHttpClient();
+                    OkHttpClient client = new OkHttpClient().setSslSocketFactory(HttpsURLConnection.getDefaultSSLSocketFactory());
                     Request request = new Request.Builder()
                             .url(context.getString(R.string.server_name) + context.getString(R.string.register_path, phoneNumber))
                             .build();
