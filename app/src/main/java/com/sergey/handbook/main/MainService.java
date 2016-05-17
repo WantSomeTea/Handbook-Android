@@ -22,14 +22,28 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
 /**
  * Created by Sergey.
@@ -55,7 +69,7 @@ public class MainService {
                 contactsList = getContactsListFromAPI();
                 Utils.setContactsList(contactsList);
             }
-        } catch (InterruptedException | ExecutionException | JSONException | IOException e) {
+        } catch (InterruptedException | ExecutionException | JSONException | IOException | CertificateException | KeyStoreException | NoSuchAlgorithmException | KeyManagementException e) {
             e.printStackTrace();
         }
         return contactsList;
@@ -83,14 +97,18 @@ public class MainService {
     }
 
     public ArrayList<HashMap<String, String>> getContactsListFromAPI()
-            throws ExecutionException, InterruptedException, IOException, JSONException {
+            throws ExecutionException, InterruptedException, IOException, JSONException, CertificateException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
         ArrayList<HashMap<String, String>> contactsArrayList = new ArrayList<>();
         String phoneNumber = sharedPreferences.getString(Preferences
                 .getPreferences.PHONE_NUMBER, "");
         String key = sharedPreferences.getString(Preferences.getPreferences.KEY, "");
         String phonebookPath = sharedPreferences.getString(Preferences
                 .getPreferences.GET_PHONEBOOK_PATH, "");
-        OkHttpClient client = new OkHttpClient();
+
+
+
+
+        OkHttpClient client = new OkHttpClient().setSslSocketFactory(getSSLContext().getSocketFactory());
         Request request = new Request.Builder()
                 .url(context.getString(R.string.server_name)
                         + phonebookPath + "?" + context.getString(R.string.phonebook_params, phoneNumber, key))
@@ -175,5 +193,35 @@ public class MainService {
                 }
             }
         }
+    }
+
+    public SSLContext getSSLContext() throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException, KeyManagementException {
+        InputStream caInput;
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        caInput = new BufferedInputStream(new FileInputStream(context.getClass().getClassLoader().getResource("2_factory-handbook.ru.crt").getFile()));
+        Certificate ca = null;
+        try {
+             ca = cf.generateCertificate(caInput);
+            System.out.println("ca=" + ((X509Certificate) ca).getSubjectDN());
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } finally {
+            caInput.close();
+        }
+
+        String keyStoreType = KeyStore.getDefaultType();
+        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+        keyStore.load(null, null);
+        keyStore.setCertificateEntry("ca", ca);
+
+        String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+        tmf.init(keyStore);
+
+        // Create an SSLContext that uses our TrustManager
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, tmf.getTrustManagers(), null);
+
+        return sslContext;
     }
 }

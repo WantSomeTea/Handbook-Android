@@ -8,7 +8,7 @@
     <string name="phonenumber_empty_error">Введите номер телефона</string>
     <string name="phonenumber_incorrect_error">Неправильный номер</string>
     <string name="type_phone_text">Введите номер телефона</string>
-    <string name="server_name">http://factory-handbook.ru:3000</string>
+    <string name="server_name">https://factory-handbook.ru:3000</string>
     <string name="check_phone_urlpath">/api/v1/reg/check_phone/?phoneNumber=%s</string>
     <string name="phonenumber_notin_DB">Вашего телефона нет в базе данных компании</string>
     <string name="title_activity_main">Контакты</string>
