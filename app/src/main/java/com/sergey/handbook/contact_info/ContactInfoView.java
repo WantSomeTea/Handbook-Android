@@ -5,7 +5,7 @@ import android.view.View;
 /**
  * Created by Sergey.
  */
-public interface ContactInfoView {
+interface ContactInfoView {
     void setDataToTextViews(String name,
                             String companyName,
                             String jobName,

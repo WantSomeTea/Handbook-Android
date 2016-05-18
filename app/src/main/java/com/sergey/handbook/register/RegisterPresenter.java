@@ -9,17 +9,17 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by Sergey.
  */
-public class RegisterPresenter {
+class RegisterPresenter {
     private RegisterView view;
     private RegisterService service;
     private Utils utils = new Utils();
 
-    public RegisterPresenter(RegisterView view, RegisterService service) {
+    RegisterPresenter(RegisterView view, RegisterService service) {
         this.view = view;
         this.service = service;
     }
 
-    public void onRegisterClicked() {
+    void onRegisterClicked() {
         try {
             String userPhoneNumber = view.getPhoneNumber();
 

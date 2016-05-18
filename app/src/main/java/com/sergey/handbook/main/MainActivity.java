@@ -20,12 +20,12 @@ import com.sergey.handbook.R;
 import com.sergey.handbook.info.InfoActivity;
 
 public class MainActivity extends AppCompatActivity implements MainView {
-    SwipeRefreshLayout swipeRefreshLayout;
-    ListView listView;
-    ProgressBar progressBar;
-    SearchView searchView;
-    MainPresenter presenter;
-    MainService mainService;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ListView listView;
+    private ProgressBar progressBar;
+    private SearchView searchView;
+    private MainPresenter presenter;
+    private MainService mainService;
 
     @Override
     public SearchView getSearchView() {

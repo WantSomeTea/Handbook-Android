@@ -40,12 +40,12 @@ import javax.net.ssl.HttpsURLConnection;
 /**
  * Created by Sergey.
  */
-public class MainService {
+class MainService {
     private Context context;
     private SharedPreferences sharedPreferences;
     private SearchRecentSuggestions suggestions;
 
-    public MainService(Context context) {
+    MainService(Context context) {
         this.context = context;
         sharedPreferences = context.getSharedPreferences(Preferences
                 .getPreferences.APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -53,7 +53,7 @@ public class MainService {
                 SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
     }
 
-    public ArrayList<HashMap<String, String>> getContactsList (Boolean isSwipeRefresh) {
+    ArrayList<HashMap<String, String>> getContactsList(Boolean isSwipeRefresh) {
         ArrayList<HashMap<String, String>> contactsList = null;
         try {
             contactsList = Utils.getContactsList();
@@ -67,7 +67,7 @@ public class MainService {
         return contactsList;
     }
 
-    public ContactsAdapter getContactsAdapter(ArrayList<HashMap<String, String>> contactsList)
+    ContactsAdapter getContactsAdapter(ArrayList<HashMap<String, String>> contactsList)
             throws InterruptedException, ExecutionException, JSONException, IOException {
 
         ContactsAdapter contactsAdapter = null;
@@ -88,7 +88,7 @@ public class MainService {
         return contactsAdapter;
     }
 
-    public ArrayList<HashMap<String, String>> getContactsListFromAPI()
+    private ArrayList<HashMap<String, String>> getContactsListFromAPI()
             throws ExecutionException, InterruptedException, IOException, JSONException, CertificateException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
         ArrayList<HashMap<String, String>> contactsArrayList = new ArrayList<>();
         String phoneNumber = sharedPreferences.getString(Preferences
@@ -96,9 +96,6 @@ public class MainService {
         String key = sharedPreferences.getString(Preferences.getPreferences.KEY, "");
         String phonebookPath = sharedPreferences.getString(Preferences
                 .getPreferences.GET_PHONEBOOK_PATH, "");
-
-
-
 
         OkHttpClient client = new OkHttpClient().setSslSocketFactory(HttpsURLConnection.getDefaultSSLSocketFactory());
         Request request = new Request.Builder()
@@ -128,7 +125,7 @@ public class MainService {
         return contactsArrayList;
     }
 
-    public AdapterView.OnItemClickListener getListOnItemClickListener(final ArrayList<HashMap<String, String>> list) {
+    AdapterView.OnItemClickListener getListOnItemClickListener(final ArrayList<HashMap<String, String>> list) {
         return new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -155,15 +152,17 @@ public class MainService {
         return intent;
     }
 
-    public ArrayList<HashMap<String, String>> getTempContactsArrayList(ArrayList<HashMap<String, String>> contactsArrayList, String query) {
+    ArrayList<HashMap<String, String>> getTempContactsArrayList(ArrayList<HashMap<String, String>> contactsArrayList, String query) {
         ArrayList<HashMap<String, String>> temp = new ArrayList<>();
         int queryLength = query.length();
         temp.clear();
         if (contactsArrayList != null && contactsArrayList.size() != 0) {
             for (int i = 0; i < contactsArrayList.size(); i++) {
-                if (queryLength <= contactsArrayList.get(i).get("name").length()) {
+                if (queryLength <= contactsArrayList.get(i).get("name").length() ||
+                        queryLength <= contactsArrayList.get(i).get("workNumber").length()) {
                     Pattern pattern = Pattern.compile(query, Pattern.CASE_INSENSITIVE);
-                    if (pattern.matcher(contactsArrayList.get(i).get("name")).find()) {
+                    if (pattern.matcher(contactsArrayList.get(i).get("name")).find() ||
+                            pattern.matcher(contactsArrayList.get(i).get("workNumber")).find()) {
                         temp.add(contactsArrayList.get(i));
                     }
                 }
@@ -173,7 +172,7 @@ public class MainService {
         return temp;
     }
 
-    public void onSuggestionEvent(ArrayList<HashMap<String, String>> contactsList, int position, SearchView searchView) {
+    void onSuggestionEvent(ArrayList<HashMap<String, String>> contactsList, int position, SearchView searchView) {
         if (contactsList != null && contactsList.size() != 0) {
             Cursor cursor = (Cursor) searchView.getSuggestionsAdapter().getItem(position);
             String feedName = cursor.getString(3);

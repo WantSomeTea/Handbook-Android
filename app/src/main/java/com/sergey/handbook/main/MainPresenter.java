@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by Sergey.
  */
-public class MainPresenter {
+class MainPresenter {
     private final MainView view;
     private final MainService service;
     private ContactsAdapter contactsAdapter;
@@ -27,7 +27,7 @@ public class MainPresenter {
         this.service = service;
     }
 
-    public void getContactsList(final Boolean isSwipeRefresh) {
+    void getContactsList(final Boolean isSwipeRefresh) {
         AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -65,7 +65,7 @@ public class MainPresenter {
         asyncTask.execute();
     }
 
-    public void getSearchViewOnQueryTextListener() {
+    void getSearchViewOnQueryTextListener() {
         view.setSearchViewOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -95,7 +95,7 @@ public class MainPresenter {
         });
     }
 
-    public void getSearchViewOnSuggestionListener() {
+    void getSearchViewOnSuggestionListener() {
         view.setSearchViewOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionSelect(int position) {

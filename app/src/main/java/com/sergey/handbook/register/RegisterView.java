@@ -3,7 +3,7 @@ package com.sergey.handbook.register;
 /**
  * Created by Sergey.
  */
-public interface RegisterView {
+interface RegisterView {
     String getPhoneNumber();
 
     void showPhoneNumberError(int resId);

@@ -6,7 +6,7 @@ import android.widget.AdapterView;
 /**
  * Created by Sergey.
  */
-public interface MainView {
+interface MainView {
 
     void setAdapterToListView(ContactsAdapter contactsAdapter);
 

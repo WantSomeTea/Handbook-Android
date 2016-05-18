@@ -3,16 +3,16 @@ package com.sergey.handbook.contact_info;
 /**
  * Created by Sergey.
  */
-public class ContactInfoPresenter {
+class ContactInfoPresenter {
     private final ContactInfoView view;
     private final ContactInfoService service;
 
-    public ContactInfoPresenter(ContactInfoView view, ContactInfoService service) {
+    ContactInfoPresenter(ContactInfoView view, ContactInfoService service) {
         this.view = view;
         this.service = service;
     }
 
-    public void setDataToActivity() {
+    void setDataToActivity() {
         view.setDataToTextViews(service.getName(),
                 service.getCompanyName(),
                 service.getJobName(),

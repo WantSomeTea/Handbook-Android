@@ -13,16 +13,16 @@ import com.sergey.handbook.R;
 /**
  * Created by Sergey.
  */
-public class InfoService {
+class InfoService {
     private final Context context;
     private SharedPreferences sharedPreferences;
 
-    public InfoService(Context context) {
+    InfoService(Context context) {
         this.context = context;
         sharedPreferences = context.getSharedPreferences(Preferences.getPreferences.APP_PREFERENCES, Context.MODE_PRIVATE);
     }
 
-    public String getPhoneNumber() {
+    String getPhoneNumber() {
         String phoneNumber;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             phoneNumber = context.getString(R.string.phone_number_text, "+" + PhoneNumberUtils.formatNumber(sharedPreferences.getString(Preferences.getPreferences.PHONE_NUMBER, ""), "RU"));
@@ -32,7 +32,7 @@ public class InfoService {
         return phoneNumber;
     }
 
-    public String getVersion() {
+    String getVersion() {
         String version = "";
         PackageInfo pInfo;
         try {

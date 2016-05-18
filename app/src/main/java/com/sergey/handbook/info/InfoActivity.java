@@ -10,10 +10,10 @@ import android.widget.TextView;
 import com.sergey.handbook.R;
 
 public class InfoActivity extends AppCompatActivity implements InfoView{
-    InfoPresenter presenter;
-    InfoService service;
-    TextView phoneNumberText;
-    TextView versionText;
+    private InfoPresenter presenter;
+    private InfoService service;
+    private TextView phoneNumberText;
+    private TextView versionText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -32,7 +32,7 @@ import io.fabric.sdk.android.Fabric;
  * status bar and navigation/system bar) with user interaction.
  */
 public class LaunchActivity extends AppCompatActivity {
-    SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
     private static final String TWITTER_KEY = "NJCBmCaM1kKk1leivd0N5ffq0";

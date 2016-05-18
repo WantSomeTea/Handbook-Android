@@ -20,7 +20,7 @@ import com.sergey.handbook.Permissions;
 /**
  * Created by Sergey.
  */
-public class ContactInfoService {
+class ContactInfoService {
     private final Context context;
     private String name;
     private String companyName;
@@ -31,12 +31,12 @@ public class ContactInfoService {
     private String email;
     private Boolean isPermissionsGranted = false;
 
-    public ContactInfoService(Context context) {
+    ContactInfoService(Context context) {
         this.context = context;
     }
 
 
-    public void getDataFromIntent(Intent intent) {
+    void getDataFromIntent(Intent intent) {
         name = intent.getStringExtra("name");
         companyName = intent.getStringExtra("companyName");
         jobName = intent.getStringExtra("jobName");
@@ -46,23 +46,23 @@ public class ContactInfoService {
         email = intent.getStringExtra("email");
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public String getCompanyName() {
+    String getCompanyName() {
         return companyName;
     }
 
-    public String getJobName() {
+    String getJobName() {
         return jobName;
     }
 
-    public String getDepartmentName() {
+    String getDepartmentName() {
         return departmentName;
     }
 
-    public String getPhoneNumber() {
+    String getPhoneNumber() {
         if (phoneNumber != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 phoneNumber = "+" + PhoneNumberUtils.formatNumber(phoneNumber, "RU");
@@ -73,23 +73,23 @@ public class ContactInfoService {
         return phoneNumber;
     }
 
-    public String getWorkNumber() {
+    String getWorkNumber() {
         return workNumber;
     }
 
-    public String getEmail() {
+    String getEmail() {
         return email;
     }
 
-    public Boolean getPermissionsGranted() {
+    private Boolean getPermissionsGranted() {
         return isPermissionsGranted;
     }
 
-    public void setPermissionsGranted(Boolean permissionsGranted) {
+    void setPermissionsGranted(Boolean permissionsGranted) {
         isPermissionsGranted = permissionsGranted;
     }
 
-    public View.OnClickListener getMobileCallOnClickListener() {
+    View.OnClickListener getMobileCallOnClickListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,7 +114,7 @@ public class ContactInfoService {
         };
     }
 
-    public View.OnClickListener getEmailOnClickListener() {
+    View.OnClickListener getEmailOnClickListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {

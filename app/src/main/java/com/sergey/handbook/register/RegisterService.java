@@ -36,14 +36,14 @@ import javax.net.ssl.HttpsURLConnection;
 /**
  * Created by Sergey.
  */
-public class RegisterService {
-    Context context;
+class RegisterService {
+    private Context context;
 
-    public RegisterService(Context context) {
+    RegisterService(Context context) {
         this.context = context;
     }
 
-    public boolean isPhoneNumberCorrect(String phoneNumber) {
+    boolean isPhoneNumberCorrect(String phoneNumber) {
         boolean isPhoneNumberCorrect = false;
 
         if (phoneNumber.length() == 11 && phoneNumber.startsWith("79")) isPhoneNumberCorrect = true;
@@ -51,7 +51,7 @@ public class RegisterService {
         return isPhoneNumberCorrect;
     }
 
-    public boolean isPhoneNumberInDB(final String phoneNumber) throws IOException, ExecutionException, InterruptedException {
+    boolean isPhoneNumberInDB(final String phoneNumber) throws IOException, ExecutionException, InterruptedException {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Callable<Boolean> callable = new Callable<Boolean>() {
             @Override
@@ -76,7 +76,7 @@ public class RegisterService {
         return future.get();
     }
 
-    public void writeSettings(final String phoneNumber) {
+    private void writeSettings(final String phoneNumber) {
         final AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -109,7 +109,7 @@ public class RegisterService {
         asyncTask.execute();
     }
 
-    public void getDigitsBuilder(final String userPhoneNumber) {
+    void getDigitsBuilder(final String userPhoneNumber) {
         AuthCallback authCallback = new AuthCallback() {
             @Override
             public void success(DigitsSession session, String phoneNumber) {

@@ -15,12 +15,12 @@ import java.util.List;
 /**
  * Created by Sergey.
  */
-public class ContactsAdapter extends SimpleAdapter {
-    Context context;
-    List<HashMap<String, String>> data;
-    int resource;
-    String[] from;
-    int[] to;
+class ContactsAdapter extends SimpleAdapter {
+    private Context context;
+    private List<HashMap<String, String>> data;
+    private int resource;
+    private String[] from;
+    private int[] to;
 
     /**
      * Constructor
@@ -36,7 +36,7 @@ public class ContactsAdapter extends SimpleAdapter {
      * @param to       The views that should display column in the "from" parameter. These should all be
      *                 TextViews. The first N views in this list are given the values of the first N columns
      */
-    public ContactsAdapter(Context context, List<HashMap<String, String>> data, int resource, String[] from, int[] to) {
+    ContactsAdapter(Context context, List<HashMap<String, String>> data, int resource, String[] from, int[] to) {
         super(context, data, resource, from, to);
         this.context = context;
         this.data = data;
