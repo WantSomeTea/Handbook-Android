@@ -112,7 +112,6 @@ class MainService {
                 hashMap.put("phoneNumber", jsonObject.getString("phoneNumber"));
                 hashMap.put("workNumber", jsonObject.getString("workNumber"));
                 hashMap.put("email", jsonObject.getString("email"));
-                hashMap.put("additionalNumbs", jsonObject.getString("additionalNumbs"));
                 hashMap.put("companyName", jsonObject.getString("companyName"));
                 hashMap.put("jobName", jsonObject.getString("jobName"));
                 hashMap.put("departmentName", jsonObject.getString("departmentName"));
