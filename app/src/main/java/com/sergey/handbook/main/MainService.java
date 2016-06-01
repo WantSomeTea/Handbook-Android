@@ -143,7 +143,6 @@ class MainService {
         intent.putExtra("phoneNumber", map.get("phoneNumber"));
         intent.putExtra("workNumber", map.get("workNumber"));
         intent.putExtra("email", map.get("email"));
-        intent.putExtra("additionalNumbs", map.get("additionalNumbs"));
         intent.putExtra("companyName", map.get("companyName"));
         intent.putExtra("jobName", map.get("jobName"));
         intent.putExtra("departmentName", map.get("departmentName"));
