@@ -35,8 +35,6 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.HttpsURLConnection;
-
 /**
  * Created by Sergey.
  */
@@ -97,7 +95,7 @@ class MainService {
         String phonebookPath = sharedPreferences.getString(Preferences
                 .getPreferences.GET_PHONEBOOK_PATH, "");
 
-        OkHttpClient client = new OkHttpClient().setSslSocketFactory(HttpsURLConnection.getDefaultSSLSocketFactory());
+        OkHttpClient client = new OkHttpClient().setSslSocketFactory(Utils.getSSLContext(context).getSocketFactory());
         Request request = new Request.Builder()
                 .url(context.getString(R.string.server_name)
                         + phonebookPath + "?" + context.getString(R.string.phonebook_params, phoneNumber, key))

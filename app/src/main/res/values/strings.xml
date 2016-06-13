@@ -30,4 +30,5 @@
     <string name="email_image">email_image</string>
     <string name="call_mobile">Позвонить на мобильный</string>
     <string name="action_bar_search">Поиск</string>
+    <string name="enter_new_phoneNumber_text">Задать новый номер телефона</string>
 </resources>

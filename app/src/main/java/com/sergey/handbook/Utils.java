@@ -17,7 +17,6 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
@@ -75,7 +74,7 @@ public class Utils {
         // Create an SSLContext that uses our TrustManager
         SSLContext sslContext = SSLContext.getInstance("TLS");
         sslContext.init(null, tmf.getTrustManagers(), null);
-        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+        //HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
 
         return sslContext;
     }
