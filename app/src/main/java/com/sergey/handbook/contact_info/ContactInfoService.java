@@ -14,6 +14,7 @@ import android.telephony.PhoneNumberUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import com.sergey.handbook.Employee;
 import com.sergey.handbook.Permissions;
 
 
@@ -37,13 +38,14 @@ class ContactInfoService {
 
 
     void getDataFromIntent(Intent intent) {
-        name = intent.getStringExtra("name");
-        companyName = intent.getStringExtra("companyName");
-        jobName = intent.getStringExtra("jobName");
-        departmentName = intent.getStringExtra("departmentName");
-        phoneNumber = intent.getStringExtra("phoneNumber");
-        workNumber = intent.getStringExtra("workNumber");
-        email = intent.getStringExtra("email");
+        Employee employee = intent.getParcelableExtra("employee");
+        name = employee.getName();
+        companyName = employee.getCompanyName();
+        jobName = employee.getJobName();
+        departmentName = employee.getDepartmentName();
+        phoneNumber = employee.getPhoneNumber();
+        workNumber = employee.getWorkNumber();
+        email = employee.getEmail();
     }
 
     String getName() {

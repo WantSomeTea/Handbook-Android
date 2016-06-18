@@ -9,6 +9,7 @@ import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.sergey.handbook.Employee;
 import com.sergey.handbook.Preferences;
 import com.sergey.handbook.R;
 import com.sergey.handbook.SuggestionProvider;
@@ -31,7 +32,6 @@ import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
@@ -51,8 +51,8 @@ class MainService {
                 SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
     }
 
-    ArrayList<HashMap<String, String>> getContactsList(Boolean isSwipeRefresh) {
-        ArrayList<HashMap<String, String>> contactsList = null;
+    ArrayList<Employee> getContactsList(Boolean isSwipeRefresh) {
+        ArrayList<Employee> contactsList = null;
         try {
             contactsList = Utils.getContactsList();
             if (contactsList == null || isSwipeRefresh) {
@@ -65,30 +65,28 @@ class MainService {
         return contactsList;
     }
 
-    ContactsAdapter getContactsAdapter(ArrayList<HashMap<String, String>> contactsList)
+    ContactsAdapter getContactsAdapter(ArrayList<Employee> contactsList)
             throws InterruptedException, ExecutionException, JSONException, IOException {
 
         ContactsAdapter contactsAdapter = null;
         if (contactsList != null && contactsList.size() != 0) {
-            Comparator<HashMap<String, String>> comparator = new Comparator<HashMap<String, String>>() {
+            Comparator<Employee> comparator = new Comparator<Employee>() {
                 @Override
-                public int compare(HashMap<String, String> lhs, HashMap<String, String> rhs) {
-                    return lhs.get("name").compareTo(rhs.get("name"));
+                public int compare(Employee lhs, Employee rhs) {
+                    return lhs.getName().compareTo(rhs.getName());
                 }
             };
             Collections.sort(contactsList, comparator);
             contactsAdapter = new ContactsAdapter(context,
-                    contactsList,
                     R.layout.contacts_row,
-                    new String[] {"name", "workNumber"},
-                    new int[] {R.id.CONTACTS_NAME_CELL, R.id.textView_PBX});
+                    contactsList);
         }
         return contactsAdapter;
     }
 
-    private ArrayList<HashMap<String, String>> getContactsListFromAPI()
+    private ArrayList<Employee> getContactsListFromAPI()
             throws ExecutionException, InterruptedException, IOException, JSONException, CertificateException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-        ArrayList<HashMap<String, String>> contactsArrayList = new ArrayList<>();
+        ArrayList<Employee> contactsArrayList = new ArrayList<>();
         String phoneNumber = sharedPreferences.getString(Preferences
                 .getPreferences.PHONE_NUMBER, "");
         String key = sharedPreferences.getString(Preferences.getPreferences.KEY, "");
@@ -104,16 +102,16 @@ class MainService {
         if (response.code() == HttpURLConnection.HTTP_OK) {
             JSONArray jsonArray = new JSONArray(response.body().string());
             for (int i = 0; i < jsonArray.length(); i++) {
-                HashMap<String, String> hashMap = new HashMap<>();
+                Employee employee = new Employee();
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                hashMap.put("name", jsonObject.getString("name"));
-                hashMap.put("phoneNumber", jsonObject.getString("phoneNumber"));
-                hashMap.put("workNumber", jsonObject.getString("workNumber"));
-                hashMap.put("email", jsonObject.getString("email"));
-                hashMap.put("companyName", jsonObject.getString("companyName"));
-                hashMap.put("jobName", jsonObject.getString("jobName"));
-                hashMap.put("departmentName", jsonObject.getString("departmentName"));
-                contactsArrayList.add(hashMap);
+                employee.setName(jsonObject.getString("name"));
+                employee.setPhoneNumber(jsonObject.getString("phoneNumber"));
+                employee.setWorkNumber(jsonObject.getString("workNumber"));
+                employee.setEmail(jsonObject.getString("email"));
+                employee.setCompanyName(jsonObject.getString("companyName"));
+                employee.setJobName(jsonObject.getString("jobName"));
+                employee.setDepartmentName(jsonObject.getString("departmentName"));
+                contactsArrayList.add(employee);
             }
         } else {
             contactsArrayList = null;
@@ -122,43 +120,37 @@ class MainService {
         return contactsArrayList;
     }
 
-    AdapterView.OnItemClickListener getListOnItemClickListener(final ArrayList<HashMap<String, String>> list) {
+    AdapterView.OnItemClickListener getListOnItemClickListener(final ArrayList<Employee> list) {
         return new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HashMap<String, String> map = list.get(position);
+                Employee employee = list.get(position);
 
-                suggestions.saveRecentQuery(map.get("name"), null);
+                suggestions.saveRecentQuery(employee.getName(), null);
 
-                context.startActivity(getContactIntent(map));
+                context.startActivity(getContactIntent(employee));
             }
         };
     }
 
-    private Intent getContactIntent(HashMap<String, String> map) {
+    private Intent getContactIntent(Employee employee) {
         Intent intent = new Intent(context, ContactInfoActivity.class);
-        intent.putExtra("name", map.get("name"));
-        intent.putExtra("phoneNumber", map.get("phoneNumber"));
-        intent.putExtra("workNumber", map.get("workNumber"));
-        intent.putExtra("email", map.get("email"));
-        intent.putExtra("companyName", map.get("companyName"));
-        intent.putExtra("jobName", map.get("jobName"));
-        intent.putExtra("departmentName", map.get("departmentName"));
+        intent.putExtra("employee", employee);
 
         return intent;
     }
 
-    ArrayList<HashMap<String, String>> getTempContactsArrayList(ArrayList<HashMap<String, String>> contactsArrayList, String query) {
-        ArrayList<HashMap<String, String>> temp = new ArrayList<>();
+    ArrayList<Employee> getTempContactsArrayList(ArrayList<Employee> contactsArrayList, String query) {
+        ArrayList<Employee> temp = new ArrayList<>();
         int queryLength = query.length();
         temp.clear();
         if (contactsArrayList != null && contactsArrayList.size() != 0) {
             for (int i = 0; i < contactsArrayList.size(); i++) {
-                if (queryLength <= contactsArrayList.get(i).get("name").length() ||
-                        queryLength <= contactsArrayList.get(i).get("workNumber").length()) {
+                if (queryLength <= contactsArrayList.get(i).getName().length() ||
+                        queryLength <= contactsArrayList.get(i).getWorkNumber().length()) {
                     Pattern pattern = Pattern.compile(query, Pattern.CASE_INSENSITIVE);
-                    if (pattern.matcher(contactsArrayList.get(i).get("name")).find() ||
-                            pattern.matcher(contactsArrayList.get(i).get("workNumber")).find()) {
+                    if (pattern.matcher(contactsArrayList.get(i).getName()).find() ||
+                            pattern.matcher(contactsArrayList.get(i).getWorkNumber()).find()) {
                         temp.add(contactsArrayList.get(i));
                     }
                 }
@@ -168,15 +160,16 @@ class MainService {
         return temp;
     }
 
-    void onSuggestionEvent(ArrayList<HashMap<String, String>> contactsList, int position, SearchView searchView) {
+    void onSuggestionEvent(ArrayList<Employee> contactsList, int position, SearchView searchView) {
         if (contactsList != null && contactsList.size() != 0) {
             Cursor cursor = (Cursor) searchView.getSuggestionsAdapter().getItem(position);
             String feedName = cursor.getString(3);
-            for (HashMap<String, String> map : contactsList) {
-                if (map.get("name").equals(feedName)) {
-                    suggestions.saveRecentQuery(map.get("name"), null);
+            for (Employee employee : contactsList) {
+                String name = employee.getName();
+                if (name.equals(feedName)) {
+                    suggestions.saveRecentQuery(name, null);
 
-                    context.startActivity(getContactIntent(map));
+                    context.startActivity(getContactIntent(employee));
                 }
             }
         }

@@ -4,13 +4,13 @@ import android.os.AsyncTask;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 
+import com.sergey.handbook.Employee;
 import com.sergey.handbook.R;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -20,7 +20,7 @@ class MainPresenter {
     private final MainView view;
     private final MainService service;
     private ContactsAdapter contactsAdapter;
-    private ArrayList<HashMap<String, String>> contactsList;
+    private ArrayList<Employee> contactsList;
 
     MainPresenter(MainView view, MainService service) {
         this.view = view;
@@ -70,7 +70,7 @@ class MainPresenter {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 try {
-                    ArrayList<HashMap<String, String>> tempContactsArrayList = service.getTempContactsArrayList(contactsList, query);
+                    ArrayList<Employee> tempContactsArrayList = service.getTempContactsArrayList(contactsList, query);
                     contactsAdapter = service.getContactsAdapter(tempContactsArrayList);
                     view.setAdapterToListView(contactsAdapter);
                     view.setListOnItemClickListener(service.getListOnItemClickListener(tempContactsArrayList));
@@ -83,7 +83,7 @@ class MainPresenter {
             @Override
             public boolean onQueryTextChange(String newText) {
                 try {
-                    ArrayList<HashMap<String, String>> tempContactsArrayList = service.getTempContactsArrayList(contactsList, newText);
+                    ArrayList<Employee> tempContactsArrayList = service.getTempContactsArrayList(contactsList, newText);
                     contactsAdapter = service.getContactsAdapter(tempContactsArrayList);
                     view.setAdapterToListView(contactsAdapter);
                     view.setListOnItemClickListener(service.getListOnItemClickListener(tempContactsArrayList));

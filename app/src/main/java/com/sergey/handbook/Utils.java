@@ -15,7 +15,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
@@ -24,7 +23,7 @@ import javax.net.ssl.TrustManagerFactory;
  * Created by Sergey.
  */
 public class Utils {
-    private static ArrayList<HashMap<String, String>> contactsList;
+    private static ArrayList<Employee> contactsList;
     public String transformNumber(String phoneNumber) {
         try {
             phoneNumber = phoneNumber.replaceAll("\\D", "");
@@ -39,11 +38,11 @@ public class Utils {
         return phoneNumber;
     }
 
-    public static ArrayList<HashMap<String, String>> getContactsList() {
+    public static ArrayList<Employee> getContactsList() {
         return contactsList;
     }
 
-    public static void setContactsList(ArrayList<HashMap<String, String>> contactsList) {
+    public static void setContactsList(ArrayList<Employee> contactsList) {
         Utils.contactsList = contactsList;
     }
 
